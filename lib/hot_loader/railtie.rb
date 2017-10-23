@@ -11,7 +11,9 @@ module React
           if ::Rails.env.development?
             React::Rails::HotLoader.restart
 
-            ActionDispatch::Reloader.to_prepare do
+            reloader = defined?(ActiveSupport::Reloader) ? ActiveSupport::Reloader : ActionDispatch::Reloader
+
+            reloader.to_prepare do
               # Seems like Passenger kills threads on the main process
               # In that case, `starting_worker_process` isn't good enough
               # because it doesn't run :(
